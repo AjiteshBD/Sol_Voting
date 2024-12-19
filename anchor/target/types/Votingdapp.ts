@@ -7,157 +7,116 @@
 export type Votingdapp = {
   "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
   "metadata": {
-    "name": "Votingdapp",
+    "name": "votingdapp",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "initializePoll",
       "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "Votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "Votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
+        193,
+        22,
+        99,
+        197,
         18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
+        33,
+        115,
+        117
       ],
       "accounts": [
         {
-          "name": "Votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "Votingdapp",
+          "name": "poll",
           "writable": true,
-          "signer": true
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  80,
+                  111,
+                  108,
+                  108
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "pollId"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
-    },
-    {
-      "name": "set",
-      "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
-      ],
-      "accounts": [
-        {
-          "name": "Votingdapp",
-          "writable": true
-        }
-      ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "pollId",
+          "type": "u64"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "pollStart",
+          "type": "u64"
+        },
+        {
+          "name": "pollEnd",
+          "type": "u64"
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "Votingdapp",
+      "name": "pollAccount",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
-        188,
-        253,
-        124,
-        25
+        109,
+        254,
+        117,
+        41,
+        232,
+        74,
+        172,
+        45
       ]
     }
   ],
   "types": [
     {
-      "name": "Votingdapp",
+      "name": "pollAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u8"
+            "name": "pollId",
+            "type": "u64"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "pollStart",
+            "type": "u64"
+          },
+          {
+            "name": "pollEnd",
+            "type": "u64"
+          },
+          {
+            "name": "candidateAmount",
+            "type": "u64"
           }
         ]
       }

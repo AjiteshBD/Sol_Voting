@@ -1,76 +1,82 @@
 import * as anchor from '@coral-xyz/anchor'
 import {Program} from '@coral-xyz/anchor'
-import {Keypair} from '@solana/web3.js'
+import {Keypair, PublicKey} from '@solana/web3.js'
 import {Votingdapp} from '../target/types/Votingdapp'
+import { startAnchor } from "solana-bankrun";
+import { BankrunProvider } from "anchor-bankrun";
+
+const IDL = require('../target/idl/Votingdapp.json')
+
+const votingAddress = new PublicKey("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF")
 
 describe('Votingdapp', () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
-  const payer = provider.wallet as anchor.Wallet
+  
 
-  const program = anchor.workspace.Votingdapp as Program<Votingdapp>
+  it('Initialize Poll', async () => {
+     const context = await startAnchor("",[{name:"Votingdapp", programId:votingAddress}],[])
+     const provider = new BankrunProvider(context);
 
-  const VotingdappKeypair = Keypair.generate()
+     const votingProgram = new Program<Votingdapp>(
+      IDL,
+      provider
+    );
 
-  it('Initialize Votingdapp', async () => {
-    await program.methods
-      .initialize()
-      .accounts({
-        Votingdapp: VotingdappKeypair.publicKey,
-        payer: payer.publicKey,
-      })
-      .signers([VotingdappKeypair])
-      .rpc()
+    
 
-    const currentCount = await program.account.Votingdapp.fetch(VotingdappKeypair.publicKey)
+    await votingProgram.methods.initializePoll(
+      new anchor.BN(1),
+      "Trump vs Modi?",
+      new anchor.BN(0),
+      new anchor.BN(1834589885)
+    ).rpc(); 
 
-    expect(currentCount.count).toEqual(0)
+    const [pollAddress] = PublicKey.findProgramAddressSync(
+      [Buffer.from("Poll"),new anchor.BN(1).toArrayLike(Buffer, "le", 8)],
+      votingProgram.programId,
+    )
+
+    const poll = await votingProgram.account.pollAccount.fetch(pollAddress)
+    console.log(poll)
+
+    expect(poll.pollId.toNumber()).toEqual(1)
+    expect(poll.description).toEqual("Trump vs Modi?")
+    expect(poll.pollStart.toNumber()).toBeLessThan(poll.pollEnd.toNumber())
+ 
+
   })
 
-  it('Increment Votingdapp', async () => {
-    await program.methods.increment().accounts({ Votingdapp: VotingdappKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.Votingdapp.fetch(VotingdappKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Increment Votingdapp Again', async () => {
-    await program.methods.increment().accounts({ Votingdapp: VotingdappKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.Votingdapp.fetch(VotingdappKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(2)
-  })
-
-  it('Decrement Votingdapp', async () => {
-    await program.methods.decrement().accounts({ Votingdapp: VotingdappKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.Votingdapp.fetch(VotingdappKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Set Votingdapp value', async () => {
-    await program.methods.set(42).accounts({ Votingdapp: VotingdappKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.Votingdapp.fetch(VotingdappKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(42)
-  })
-
-  it('Set close the Votingdapp account', async () => {
-    await program.methods
-      .close()
-      .accounts({
-        payer: payer.publicKey,
-        Votingdapp: VotingdappKeypair.publicKey,
-      })
-      .rpc()
-
-    // The account should no longer exist, returning null.
-    const userAccount = await program.account.Votingdapp.fetchNullable(VotingdappKeypair.publicKey)
-    expect(userAccount).toBeNull()
-  })
+  
 })
+
+
+//   it('Initialize Poll', async () => {
+//     const context = await startAnchor("", [{ name: "Votingdapp", programId: votingAddress }], []);
+//     const provider = new BankrunProvider(context);
+
+//     const votingProgram = new Program<Votingdapp>(
+//       IDL,
+//       provider
+//     );
+
+ 
+
+
+//     await votingProgram.methods
+//       .initializePoll(
+//         new anchor.BN(1),
+//         "Trump vs Modi?",
+//         new anchor.BN(0),
+//         new anchor.BN(1834589885)
+//       )
+//       .rpc();
+
+//       const [pollAddress, pollBump] = PublicKey.findProgramAddressSync(
+//         [Buffer.from("Poll"),new anchor.BN(1).toArrayLike(Buffer, "le", 8)],
+//         votingProgram.programId,
+//       );
+
+//     const poll = await votingProgram.account.pollAccount.fetch(pollAddress);
+//     console.log("Fetched Poll Account:", poll);
+//   });
+// });
