@@ -1,20 +1,14 @@
-/**
- * Program IDL in camelCase format in order to be used in JS/TS.
- *
- * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/Votingdapp.json`.
- */
-export type Votingdapp = {
+{
   "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
   "metadata": {
-    "name": "votingdapp",
+    "name": "voting_dapp",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
   "instructions": [
     {
-      "name": "initializeCandidate",
+      "name": "initialize_candidate",
       "discriminator": [
         210,
         107,
@@ -46,7 +40,7 @@ export type Votingdapp = {
               },
               {
                 "kind": "arg",
-                "path": "pollId"
+                "path": "poll_id"
               }
             ]
           }
@@ -72,33 +66,33 @@ export type Votingdapp = {
               },
               {
                 "kind": "arg",
-                "path": "pollId"
+                "path": "poll_id"
               },
               {
                 "kind": "arg",
-                "path": "candidateName"
+                "path": "candidate_name"
               }
             ]
           }
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "canditateName",
+          "name": "canditate_name",
           "type": "string"
         },
         {
-          "name": "pollId",
+          "name": "_poll_id",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "initializePoll",
+      "name": "initialize_poll",
       "discriminator": [
         193,
         22,
@@ -131,19 +125,19 @@ export type Votingdapp = {
               },
               {
                 "kind": "arg",
-                "path": "pollId"
+                "path": "poll_id"
               }
             ]
           }
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "pollId",
+          "name": "poll_id",
           "type": "u64"
         },
         {
@@ -151,11 +145,11 @@ export type Votingdapp = {
           "type": "string"
         },
         {
-          "name": "pollStart",
+          "name": "poll_start",
           "type": "u64"
         },
         {
-          "name": "pollEnd",
+          "name": "poll_end",
           "type": "u64"
         }
       ]
@@ -163,7 +157,7 @@ export type Votingdapp = {
   ],
   "accounts": [
     {
-      "name": "candidateAccount",
+      "name": "CandidateAccount",
       "discriminator": [
         69,
         203,
@@ -176,7 +170,7 @@ export type Votingdapp = {
       ]
     },
     {
-      "name": "pollAccount",
+      "name": "PollAccount",
       "discriminator": [
         109,
         254,
@@ -191,28 +185,28 @@ export type Votingdapp = {
   ],
   "types": [
     {
-      "name": "candidateAccount",
+      "name": "CandidateAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "candidateName",
+            "name": "candidate_name",
             "type": "string"
           },
           {
-            "name": "candidateVotes",
+            "name": "candidate_votes",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "pollAccount",
+      "name": "PollAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "pollId",
+            "name": "poll_id",
             "type": "u64"
           },
           {
@@ -220,19 +214,19 @@ export type Votingdapp = {
             "type": "string"
           },
           {
-            "name": "pollStart",
+            "name": "poll_start",
             "type": "u64"
           },
           {
-            "name": "pollEnd",
+            "name": "poll_end",
             "type": "u64"
           },
           {
-            "name": "candidateAmount",
+            "name": "candidate_amount",
             "type": "u64"
           }
         ]
       }
     }
   ]
-};
+}

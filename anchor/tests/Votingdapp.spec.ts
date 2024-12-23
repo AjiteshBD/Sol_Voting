@@ -11,18 +11,23 @@ const votingAddress = new PublicKey("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF
 
 describe('Votingdapp', () => {
   // Configure the client to use the local cluster.
-  
+  let context;
+  let provider;
+  let votingProgram: anchor.Program<Votingdapp>;
 
-  it('Initialize Poll', async () => {
-     const context = await startAnchor("",[{name:"Votingdapp", programId:votingAddress}],[])
-     const provider = new BankrunProvider(context);
-
-     const votingProgram = new Program<Votingdapp>(
+  beforeAll(async () => {
+    context = await startAnchor("",[{name:"Votingdapp", programId:votingAddress}],[])
+    provider = new BankrunProvider(context);
+    votingProgram = new Program<Votingdapp>(
       IDL,
       provider
     );
+  });
+  
 
+  it('Initialize Poll', async () => {
     
+
 
     await votingProgram.methods.initializePoll(
       new anchor.BN(1),
@@ -46,6 +51,26 @@ describe('Votingdapp', () => {
 
   })
 
+  it('Initialize Candidate', async () => {
+
+    await votingProgram.methods.initializeCandidate(
+      "Trump",
+      new anchor.BN(1)
+    ).rpc();
+  
+    await votingProgram.methods.initializeCandidate(
+      "Modi",
+      new anchor.BN(1)
+    ).rpc();
+  //  const[candidateAddress]= PublicKey.findProgramAddressSync(
+  //     [Buffer.from("Candidate"),new anchor.BN(1).toArrayLike(Buffer, "le", 8)],
+  //     votingProgram.programId,
+  //   )
+  })
+
+  it('vote', async () => {
+    
+  })
   
 })
 
